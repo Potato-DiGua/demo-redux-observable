@@ -1,15 +1,29 @@
-import { createActions, handleActions, combineActions } from 'redux-actions';
+import { CounterTypes } from "./CounterAction";
+import { AppReducerMap } from "../../app/store";
 
-const reducer = handleActions(
-  {
-    [combineActions(increment, decrement)]: (
-      state,
-      { payload: { amount } }
-    ) => {
-      return { ...state, counter: state.counter + amount };
-    }
+const CounterReducer: AppReducerMap = {
+  [CounterTypes.increment]: (state) => {
+    console.log(state);
+
+    return state.update("value", (value) => value + 1);
   },
-  defaultState
-);
+  [CounterTypes.decrement]: (state) => {
+    return state.update("value", (value) => value - 1);
+  },
+  [CounterTypes.incrementByAmount]: (
+    state,
+    { payload }: { payload: number }
+  ) => {
+    return state.update("value", (value) => value + payload);
+  },
+  [CounterTypes.incrementIfOdd]: (state, { payload }: { payload: number }) => {
+    return state.update("value", (value) => {
+      if (value % 2 === 1) {
+        return value + payload;
+      }
+      return value;
+    });
+  },
+};
 
-export default reducer;
+export default CounterReducer;
